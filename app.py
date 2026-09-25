@@ -8,6 +8,7 @@ import argparse
 from dotenv import load_dotenv
 
 from asr.openai import OpenAITranscriber
+from audio.feedback import FeedbackPlayer
 from audio.recorder import MicrophoneRecorder
 from core.recording_controller import RecordingController
 from input.x11_hotkey import X11PushToTalk
@@ -32,6 +33,7 @@ def main() -> None:
         recorder=recorder,
         transcriber=OpenAITranscriber(model=args.model),
         injector=X11TextInjector(),
+        feedback_player=FeedbackPlayer(),
     )
     hotkey = X11PushToTalk(controller.on_ptt_down, controller.on_ptt_up)
     try:

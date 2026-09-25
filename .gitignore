@@ -16,6 +16,7 @@ build/
 dist/
 *.egg-info/
 
-# Local audio files
+# Local audio files, except bundled feedback effects
 *.wav
 *.mp3
+!assets/sounds/*.mp3

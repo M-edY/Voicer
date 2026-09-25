@@ -1,8 +1,9 @@
 # Voicer
 
-An X11 push-to-talk voice-input utility. Hold **Ctrl+Shift** to record; on
-release, Voicer transcribes your speech, prints the result for debugging, and
-uses Ctrl+V to paste it into the focused application. It never presses Enter.
+An X11 push-to-talk voice-input utility. Hold **Ctrl+Shift** to play a short
+recording-start cue and begin capture; on release, Voicer transcribes your
+speech, prints the result for debugging, and uses Ctrl+V to paste it into the
+focused application. It never presses Enter.
 
 ## Requirements
 
@@ -46,7 +47,8 @@ Voicer is one small pipeline:
 
 ```mermaid
 flowchart LR
-    Hotkey[Hold Ctrl+Shift] --> Recorder[Record microphone audio]
+    Hotkey[Hold Ctrl+Shift] --> Cue[Play start cue]
+    Cue --> Recorder[Record microphone audio]
     Recorder --> Transcriber[Transcribe with OpenAI]
     Transcriber --> Text[Transcript text]
     Text --> Terminal[Print for debugging]
@@ -54,16 +56,17 @@ flowchart LR
     Paster --> App[Focused application]
 ```
 
-In plain terms, the app has five jobs:
+In plain terms, the app has six jobs:
 
 1. **Hotkey:** detects when you press and release Ctrl+Shift.
-2. **Recorder:** captures your microphone while the keys are held.
-3. **Transcriber:** sends the finished recording to OpenAI and receives text.
-4. **Paster:** copies that text and sends Ctrl+V to the focused app.
-5. **Controller:** connects the steps in order and keeps the app responsive
+2. **Start cue:** plays the bundled sound before recording begins.
+3. **Recorder:** captures your microphone while the keys are held.
+4. **Transcriber:** sends the finished recording to OpenAI and receives text.
+5. **Paster:** copies that text and sends Ctrl+V to the focused app.
+6. **Controller:** connects the steps in order and keeps the app responsive
    while transcription happens in the background.
 
 The files are separated only to keep future changes small. Supporting another
 platform mainly means replacing the hotkey and paste code; switching to a
 different speech-to-text provider mainly means replacing the transcriber. The
-core flow stays: **record, transcribe, paste**.
+core flow stays: **cue, record, transcribe, paste**.

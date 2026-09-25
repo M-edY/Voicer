@@ -5,6 +5,7 @@ from __future__ import annotations
 from concurrent.futures import Future, ThreadPoolExecutor
 
 from asr.base import Transcriber
+from audio.feedback import FeedbackPlayer
 from audio.recorder import MicrophoneRecorder, Recording
 from core.state import AppState
 from input.base import TextInjector
@@ -18,16 +19,20 @@ class RecordingController:
         recorder: MicrophoneRecorder,
         transcriber: Transcriber,
         injector: TextInjector | None = None,
+        feedback_player: FeedbackPlayer | None = None,
     ) -> None:
         self._recorder = recorder
         self._transcriber = transcriber
         self._injector = injector
+        self._feedback_player = feedback_player
         self._state = AppState.IDLE
         self._worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix="asr")
 
     def on_ptt_down(self) -> None:
         if self._state is not AppState.IDLE:
             return
+        if self._feedback_player is not None:
+            self._feedback_player.play_recording_start()
         try:
             self._recorder.start()
         except Exception as error:
