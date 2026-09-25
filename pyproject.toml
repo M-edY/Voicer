@@ -1,0 +1,13 @@
+[project]
+name = "voicer"
+version = "0.1.0"
+description = "A safe, push-to-talk desktop voice-input utility."
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "sounddevice>=0.5.0",
+]
+
+[tool.ruff]
+line-length = 88
